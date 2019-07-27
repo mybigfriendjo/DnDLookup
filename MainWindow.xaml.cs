@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +17,7 @@ namespace DnDLookup
     public partial class MainWindow : Window
     {
         private readonly ObservableCollection<SearchItem> listResultItems = new ObservableCollection<SearchItem>();
-        private readonly List<DetailView> openDetailViews = new List<DetailView>();
+        private readonly Dictionary<SearchItem, DetailView> openDetailViews = new Dictionary<SearchItem, DetailView>();
 
         public MainWindow()
         {
@@ -25,10 +28,24 @@ namespace DnDLookup
 
         private void ListViewResultItem_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            SearchItem item = (SearchItem) ((ListViewItem) sender).Content;
+            ShowDetailView((SearchItem) ((ListViewItem) sender).Content);
+        }
+
+        private async void ShowDetailView(SearchItem item)
+        {
+            if (openDetailViews.ContainsKey(item))
+            {
+                await Task.Delay(100);
+                openDetailViews[item].Activate();
+                return;
+            }
+
             DetailView view = new DetailView(item);
-            openDetailViews.Add(view);
+            openDetailViews.Add(item, view);
+            view.Closing += (sender, args) => { openDetailViews.Remove(view.currentItem); };
             view.Show();
+            await Task.Delay(100);
+            view.Activate();
         }
 
         private void ListViewResultItem_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -38,10 +55,7 @@ namespace DnDLookup
                 return;
             }
 
-            SearchItem item = (SearchItem) ((ListViewItem) sender).Content;
-            DetailView view = new DetailView(item);
-            openDetailViews.Add(view);
-            view.Show();
+            ShowDetailView((SearchItem) ((ListViewItem) sender).Content);
             e.Handled = true;
         }
 
@@ -102,7 +116,7 @@ namespace DnDLookup
             }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) { CleanExit(); }
+        private void Window_Closing(object sender, CancelEventArgs e) { CleanExit(); }
 
         private void MoveListResultSelection(int direction)
         {
@@ -144,9 +158,9 @@ namespace DnDLookup
 
         private void CleanExit()
         {
-            foreach (DetailView view in openDetailViews)
+            foreach (DetailView detailView in openDetailViews.Values.ToList())
             {
-                view.Close();
+                detailView.Close();
             }
         }
     }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DnDLookup"
         mc:Ignorable="d"
-        Title="DetailView" Height="450" Width="800">
+        Title="DetailView" Height="450" Width="486.607">
     <Grid>
         <WebBrowser x:Name="webBrowser" />
 

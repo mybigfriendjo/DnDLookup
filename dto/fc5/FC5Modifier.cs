@@ -6,6 +6,6 @@ namespace DnDLookup.dto.fc5
     public class FC5Modifier
     {
         [XmlAttribute("category")] public string Category { get; set; }
-        [XmlText]public string Modifier { get; set; }
+        [XmlText] public string Modifier { get; set; }
     }
 }

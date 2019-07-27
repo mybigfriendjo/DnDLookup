@@ -90,7 +90,7 @@
     <Compile Include="dto\fc5\FC5SpellList.cs" />
     <Compile Include="dto\fc5\FC5SpellListIndex.cs" />
     <Compile Include="dto\fc5\FC5Trait.cs" />
-    <Compile Include="dto\IFC5Html.cs" />
+    <Compile Include="dto\FC5Html.cs" />
     <Compile Include="dto\SearchItem.cs" />
     <Compile Include="extension\StringExtensions.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -129,7 +129,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\index.html" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\accept.png" />
   </ItemGroup>

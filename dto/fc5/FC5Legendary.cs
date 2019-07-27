@@ -6,7 +6,7 @@ namespace DnDLookup.dto.fc5
     public class FC5Legendary
     {
         [XmlElement("name")] public string Name { get; set; }
-        [XmlElement("text")] public string[] Text { get; set; }
-        [XmlElement("attack")] public string[] Attack { get; set; }
+        [XmlElement("text")] public string[] Texts { get; set; }
+        [XmlElement("attack")] public string[] Attacks { get; set; }
     }
 }

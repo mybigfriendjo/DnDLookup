@@ -1,9 +1,11 @@
-﻿namespace DnDLookup.dto
+﻿using System;
+
+namespace DnDLookup.dto
 {
-    public class SearchItem
+    public class SearchItem : IEquatable<SearchItem>
     {
-        public string Name { get; set; }
-        public ItemType Type { get; set; }
+        public string Name { get; }
+        public ItemType Type { get; }
 
         public enum ItemType
         {
@@ -14,6 +16,36 @@
         {
             Name = name;
             Type = type;
+        }
+
+        public bool Equals(SearchItem other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (Name == null)
+            {
+                if (other.Name != null)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (!Name.Equals(other.Name))
+                {
+                    return false;
+                }
+            }
+
+            if (Type != other.Type)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

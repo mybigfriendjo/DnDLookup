@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DnDLookup"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Closing="Window_Closing">
+        Title="DnD Lookup" Height="450" Width="800" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -42,7 +42,7 @@
             <ListView.Resources>
                 <Style TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewResultItem_DoubleClick" />
-                    <EventSetter Event="PreviewKeyDown" Handler="ListViewResultItem_PreviewKeyDown"></EventSetter>
+                    <EventSetter Event="PreviewKeyDown" Handler="ListViewResultItem_PreviewKeyDown" />
                 </Style>
             </ListView.Resources>
             <ListView.View>
