@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 using DnDLookup.Properties;
@@ -16,6 +17,44 @@ namespace DnDLookup.dto.fc5
             {"L", "Large"},
             {"H", "Huge"},
             {"G", "Gargantuan"}
+        };
+
+        private static readonly Dictionary<string, string> xpValues = new Dictionary<string, string>()
+        {
+            {"0", "0 or 10"},
+            {"1/8", "25"},
+            {"1/4", "50"},
+            {"1/2", "100"},
+            {"1", "200"},
+            {"2", "450"},
+            {"3", "700"},
+            {"4", "1,100"},
+            {"5", "1,800"},
+            {"6", "2,300"},
+            {"7", "2,900"},
+            {"8", "3,900"},
+            {"9", "5,000"},
+            {"10", "5,900"},
+            {"11", "7,200"},
+            {"12", "8,400"},
+            {"13", "10,000"},
+            {"14", "11,500"},
+            {"15", "13,000"},
+            {"16", "15,000"},
+            {"17", "18,000"},
+            {"18", "20,000"},
+            {"19", "22,000"},
+            {"20", "25,000"},
+            {"21", "33,000"},
+            {"22", "41,000"},
+            {"23", "50,000"},
+            {"24", "62,000"},
+            {"25", "75,000"},
+            {"26", "90,000"},
+            {"27", "105,000"},
+            {"28", "120,000"},
+            {"29", "135,000"},
+            {"30", "155,000"}
         };
 
         [XmlElement("name")] public string Name { get; set; }
@@ -75,12 +114,13 @@ namespace DnDLookup.dto.fc5
             buf.AppendLine("<table width=\"100%\">");
             buf.AppendLine("<tr><th>STR</th><th>DEX</th><th>CON</th><th>INT</th><th>WIS</th><th>CHA</th></tr>");
             buf.Append("<tr>");
-            buf.Append("<td>").Append(Strengh).Append("</td>");
-            buf.Append("<td>").Append(Dexterity).Append("</td>");
-            buf.Append("<td>").Append(Constitution).Append("</td>");
-            buf.Append("<td>").Append(Intelligence).Append("</td>");
-            buf.Append("<td>").Append(Wisdom).Append("</td>");
-            buf.Append("<td>").Append(Charisma).Append("</td>");
+
+            buf.Append("<td>").Append(Strengh).Append(" (").Append(CalcMod(Strengh)).Append(")</td>");
+            buf.Append("<td>").Append(Dexterity).Append(" (").Append(CalcMod(Dexterity)).Append(")</td>");
+            buf.Append("<td>").Append(Constitution).Append(" (").Append(CalcMod(Constitution)).Append(")</td>");
+            buf.Append("<td>").Append(Intelligence).Append(" (").Append(CalcMod(Intelligence)).Append(")</td>");
+            buf.Append("<td>").Append(Wisdom).Append(" (").Append(CalcMod(Wisdom)).Append(")</td>");
+            buf.Append("<td>").Append(Charisma).Append(" (").Append(CalcMod(Charisma)).Append(")</td>");
             buf.AppendLine("</tr>");
             buf.AppendLine("</table>");
             buf.AppendLine("</p>");
@@ -129,7 +169,7 @@ namespace DnDLookup.dto.fc5
                 buf.Append("<span class=\"bold\">Languages</span>").Append(" ").Append(Languages).Append("<br />");
             }
 
-            buf.Append("<span class=\"bold\">CR</span>").Append(" ").Append(CR).Append("<br />");
+            buf.Append("<span class=\"bold\">CR</span>").Append(" ").Append(CR).Append(" (").Append(xpValues[CR]).Append(" XP)<br />");
             buf.AppendLine("</p>");
 
             buf.AppendLine("<hr />");
@@ -193,6 +233,23 @@ namespace DnDLookup.dto.fc5
             string template = Resources.index;
 
             return template.Replace("{replace:title}", "Monster").Replace("{replace:body}", buf.ToString());
+        }
+
+        private string CalcMod(int value)
+        {
+            int tmpValue;
+            if (value >= 10)
+            {
+                tmpValue = (int) Math.Floor((double) ((value - 10) / 2));
+            }
+            else
+            {
+                tmpValue = Math.Abs(value - 10) / 2;
+                tmpValue = tmpValue + value % 2;
+                tmpValue *= -1;
+            }
+
+            return (tmpValue > 0 ? "+" : "") + tmpValue;
         }
     }
 }
