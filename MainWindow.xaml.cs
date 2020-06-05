@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +18,7 @@ namespace DnDLookup
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string DEFAULT_FILENAME = "Full Compendium.xml";
         private readonly ObservableCollection<SearchItem> listResultItems = new ObservableCollection<SearchItem>();
         private readonly Dictionary<SearchItem, DetailView> openDetailViews = new Dictionary<SearchItem, DetailView>();
 
@@ -24,6 +27,18 @@ namespace DnDLookup
             InitializeComponent();
             listResults.Items.Clear();
             listResults.ItemsSource = listResultItems;
+
+            if (File.Exists(DEFAULT_FILENAME))
+            {
+                try
+                {
+                    DataStorage.LoadXmlFile(DEFAULT_FILENAME);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
 
         private void ListViewResultItem_DoubleClick(object sender, MouseButtonEventArgs e)
@@ -67,11 +82,7 @@ namespace DnDLookup
                 return;
             }
 
-            if (DataStorage.LoadXmlFile(odf.FileName))
-            {
-                MessageBox.Show("XML-File Import successful!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
+            if (!DataStorage.LoadXmlFile(odf.FileName))
             {
                 MessageBox.Show("XML-File Import was not successful!\r\nPlease make sure the XML-File has the correct Format.\r\n(Fight Club 5 XML-Format)",
                                 "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
